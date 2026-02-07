@@ -1,10 +1,13 @@
+# Cloud Build ignore file
+# Unlike .gitignore, this DOES NOT exclude pnpm-lock.yaml (needed for Docker build)
+
 node_modules
 **/node_modules/
 .env
 docker-compose.extra.yml
 dist
 *.bun-build
-pnpm-lock.yaml
+# pnpm-lock.yaml  # KEEP THIS FILE - needed for Docker build
 bun.lock
 bun.lockb
 coverage
@@ -22,8 +25,6 @@ apps/macos/.build/
 apps/shared/MoltbotKit/.build/
 **/ModuleCache/
 bin/
-bin/clawdbot-mac
-bin/docs-list
 apps/macos/.build-local/
 apps/macos/.swiftpm/
 apps/shared/MoltbotKit/.swiftpm/
@@ -33,7 +34,6 @@ apps/ios/*.xcworkspace/
 apps/ios/.swiftpm/
 vendor/
 apps/ios/Clawdbot.xcodeproj/
-apps/ios/Clawdbot.xcodeproj/**
 apps/macos/.build/**
 **/*.bun-build
 apps/ios/*.xcfilelist
@@ -52,7 +52,6 @@ apps/ios/fastlane/screenshots/
 apps/ios/fastlane/test_output/
 apps/ios/fastlane/logs/
 apps/ios/fastlane/.env
-apps/ios/fastlane/report.xml
 
 # fastlane build artifacts (local)
 apps/ios/*.ipa
@@ -60,16 +59,15 @@ apps/ios/*.dSYM.zip
 
 # provisioning profiles (local)
 apps/ios/*.mobileprovision
-.env
 
 # Local untracked files
 .local/
 .vscode/
-/IDENTITY.md
 /USER.md
-/package-lock.json
-/infra/openclaw/.terraform/
 .tgz
 
 # local tooling
 .serena/
+
+# Git internals
+.git
