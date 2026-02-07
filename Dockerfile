@@ -8,13 +8,16 @@ RUN corepack enable
 
 WORKDIR /app
 
-ARG OPENCLAW_DOCKER_APT_PACKAGES=""
+ARG OPENCLAW_DOCKER_APT_PACKAGES="git gh"
 RUN if [ -n "$OPENCLAW_DOCKER_APT_PACKAGES" ]; then \
       apt-get update && \
       DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends $OPENCLAW_DOCKER_APT_PACKAGES && \
       apt-get clean && \
       rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*; \
     fi
+
+# Install gog (Google Workspace CLI) via npm
+RUN npm install -g gogcli || echo "gog install skipped (optional)"
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY ui/package.json ./ui/package.json
@@ -26,14 +29,22 @@ RUN pnpm install --frozen-lockfile
 COPY . .
 RUN OPENCLAW_A2UI_SKIP_MISSING=1 pnpm build
 # Force pnpm for UI build (Bun may fail on ARM/Synology architectures)
-ENV OPENCLAW_PREFER_PNPM=1
-RUN pnpm ui:build
+    ENV OPENCLAW_PREFER_PNPM=1
+    RUN pnpm ui:build
 
-ENV NODE_ENV=production
+    # Install mcporter (Linear MCP bridge) and Codex CLI
+    RUN npm install -g mcporter || echo "mcporter install skipped"
+    RUN npm install -g @openai/codex || echo "codex install skipped"
+
+    ENV NODE_ENV=production
+ENV NODE_OPTIONS="--max-old-space-size=1536"
+
+# Create data directory and set permissions
+RUN mkdir -p /data/openclaw && chown -R node:node /data
+RUN chmod +x /app/entrypoint.sh
 
 # Security hardening: Run as non-root user
-# The node:22-bookworm image includes a 'node' user (uid 1000)
-# This reduces the attack surface by preventing container escape via root privileges
 USER node
 
-CMD ["node", "dist/index.js"]
+ENTRYPOINT ["/app/entrypoint.sh"]
+CMD ["node", "dist/index.js", "gateway", "--bind", "lan", "--port", "8080"]
