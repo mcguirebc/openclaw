@@ -69,5 +69,8 @@ apps/ios/*.mobileprovision
 # local tooling
 .serena/
 
+# Terraform provider binaries (large)
+**/.terraform/
+
 # Git internals
 .git
