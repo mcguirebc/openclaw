@@ -53,7 +53,8 @@
     "telegram": {
       "enabled": true,
       "dmPolicy": "allowlist",
-      "allowFrom": ["7918231249", "@mcguirebc"]
+      "allowFrom": ["7918231249", "@mcguirebc"],
+      "webhookUrl": "https://openclaw-gateway-751572738104.us-west1.run.app/telegram-webhook"
     },
     "whatsapp": {
       "dmPolicy": "allowlist",

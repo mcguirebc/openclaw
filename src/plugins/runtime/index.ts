@@ -110,6 +110,7 @@ import { monitorTelegramProvider } from "../../telegram/monitor.js";
 import { probeTelegram } from "../../telegram/probe.js";
 import { sendMessageTelegram } from "../../telegram/send.js";
 import { resolveTelegramToken } from "../../telegram/token.js";
+import { createTelegramWebhookHandler } from "../../telegram/webhook.js";
 import { loadWebMedia } from "../../web/media.js";
 import { getActiveWebListener } from "../../web/active-listener.js";
 import {
@@ -291,6 +292,7 @@ export function createPluginRuntime(): PluginRuntime {
         resolveTelegramToken,
         sendMessageTelegram,
         monitorTelegramProvider,
+        createTelegramWebhookHandler,
         messageActions: telegramMessageActions,
       },
       signal: {
