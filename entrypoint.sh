@@ -10,7 +10,10 @@ mkdir -p "$OPENCLAW_STATE_DIR"
 # Clear stale lock files from previous container instances
 find "$OPENCLAW_STATE_DIR" -name "*.lock" -type f -delete 2>/dev/null || true
 
-if [[ ! -f "$OPENCLAW_CONFIG_PATH" && -f "$OPENCLAW_CONFIG_TEMPLATE" ]]; then
+if [[ -n "${OPENCLAW_CONFIG_TEMPLATE_FORCE:-}" && -f "$OPENCLAW_CONFIG_TEMPLATE" ]]; then
+  echo "Refreshing config from template..."
+  cp "$OPENCLAW_CONFIG_TEMPLATE" "$OPENCLAW_CONFIG_PATH"
+elif [[ ! -f "$OPENCLAW_CONFIG_PATH" && -f "$OPENCLAW_CONFIG_TEMPLATE" ]]; then
   echo "Initializing config from template..."
   cp "$OPENCLAW_CONFIG_TEMPLATE" "$OPENCLAW_CONFIG_PATH"
 fi
