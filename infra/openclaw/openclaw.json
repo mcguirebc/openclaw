@@ -28,6 +28,11 @@
       }
     }
   },
+  "logging": {
+    "level": "debug",
+    "consoleLevel": "debug",
+    "consoleStyle": "compact"
+  },
   "models": {
     "mode": "merge",
     "providers": {
