@@ -39,7 +39,12 @@ cd /opt/openclaw
 mkdir -p /etc/caddy
 cat > /etc/caddy/Caddyfile << 'CADDYEOF'
 ${domain} {
-  reverse_proxy localhost:8080
+  handle /healthz {
+    respond "ok" 200
+  }
+  handle {
+    reverse_proxy localhost:8080
+  }
 }
 CADDYEOF
 
