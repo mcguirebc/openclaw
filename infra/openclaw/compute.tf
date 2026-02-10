@@ -62,12 +62,13 @@ resource "google_compute_instance" "openclaw" {
   }
 
   metadata_startup_script = templatefile("${path.module}/startup.sh.tpl", {
-    project_id                 = var.project_id
-    openclaw_config_secret     = var.openclaw_config_secret
-    openclaw_config_secret_ver = var.openclaw_config_secret_version
-    domain                     = var.domain
-    brain_bucket               = google_storage_bucket.brain.name
-    sessions_bucket            = google_storage_bucket.sessions.name
-    image                      = var.image
+    project_id                  = var.project_id
+    openclaw_config_secret      = var.openclaw_config_secret
+    openclaw_config_secret_ver  = var.openclaw_config_secret_version
+    domain                      = var.domain
+    brain_bucket                = google_storage_bucket.brain.name
+    sessions_bucket             = google_storage_bucket.sessions.name
+    image                       = var.image
+    openclaw_config_placeholder = join("", ["$", "{", "OPENCLAW_CONFIG", "}"])
   })
 }

@@ -69,6 +69,10 @@ apps/ios/*.mobileprovision
 /USER.md
 /package-lock.json
 /infra/openclaw/.terraform/
+/infra/openclaw/terraform.tfstate
+/infra/openclaw/terraform.tfstate.backup
+/infra/openclaw/tfplan
+/infra/openclaw/terraform.tfvars
 .tgz
 
 # local tooling

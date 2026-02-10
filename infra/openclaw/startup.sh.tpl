@@ -43,7 +43,7 @@ ${domain} {
 }
 CADDYEOF
 
-# Docker Compose ($${OPENCLAW_CONFIG} = literal ${OPENCLAW_CONFIG} for docker-compose env substitution)
+# Docker Compose (openclaw_config_placeholder = literal for docker-compose env substitution)
 cat > /opt/openclaw/docker-compose.prod.yml << 'COMPOSEEOF'
 services:
   openclaw-gateway:
@@ -55,7 +55,7 @@ services:
       OPENCLAW_CONFIG_TEMPLATE: /app/infra/openclaw/openclaw.json
       OPENCLAW_BRAIN_BUCKET: ${brain_bucket}
       OPENCLAW_SESSIONS_BUCKET: ${sessions_bucket}
-      OPENCLAW_CONFIG: $${OPENCLAW_CONFIG}
+      OPENCLAW_CONFIG: ${openclaw_config_placeholder}
     volumes:
       - /data/openclaw:/data/openclaw
     ports:
