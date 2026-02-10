@@ -14,7 +14,7 @@ env:
   ZONE: us-west1-b
   VM_NAME: openclaw-gateway
   IMAGE: ghcr.io/openclaw/openclaw:deploy
-  DOMAIN: gateway.openclaw.ai
+  DOMAIN: gateway.note.ski
 
 permissions:
   contents: read

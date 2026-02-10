@@ -61,7 +61,7 @@
       "enabled": true,
       "dmPolicy": "allowlist",
       "allowFrom": ["7918231249", "@mcguirebc"],
-      "webhookUrl": "https://gateway.openclaw.ai/telegram-webhook"
+      "webhookUrl": "https://gateway.note.ski/telegram-webhook"
     },
     "whatsapp": {
       "dmPolicy": "allowlist",
