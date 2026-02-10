@@ -20,17 +20,19 @@
     "defaults": {
       "maxConcurrent": 1,
       "model": {
-        "primary": "nvidia-nim/moonshotai/kimi-k2.5",
-        "fallbacks": ["openai/gpt-5-mini", "anthropic/claude-sonnet-4-5"]
+        "primary": "anthropic/claude-sonnet-4-5",
+        "fallbacks": ["openai/gpt-4.1-mini", "nvidia-nim/moonshotai/kimi-k2.5"]
       },
       "models": {
+        "anthropic/claude-sonnet-4-5": { "alias": "Claude Sonnet 4.5" },
+        "openai/gpt-4.1-mini": { "alias": "GPT-4.1 Mini" },
         "nvidia-nim/moonshotai/kimi-k2.5": { "alias": "Kimi K2.5" }
       }
     }
   },
   "logging": {
-    "level": "debug",
-    "consoleLevel": "debug",
+    "level": "info",
+    "consoleLevel": "info",
     "consoleStyle": "compact"
   },
   "models": {
@@ -59,7 +61,7 @@
       "enabled": true,
       "dmPolicy": "allowlist",
       "allowFrom": ["7918231249", "@mcguirebc"],
-      "webhookUrl": "https://openclaw-gateway-751572738104.us-west1.run.app/telegram-webhook"
+      "webhookUrl": "https://gateway.openclaw.ai/telegram-webhook"
     },
     "whatsapp": {
       "dmPolicy": "allowlist",

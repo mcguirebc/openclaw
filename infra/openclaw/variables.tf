@@ -4,44 +4,43 @@ variable "project_id" {
 }
 
 variable "region" {
-  description = "Primary region for Cloud Run and storage"
+  description = "Primary region for GCE and storage"
   type        = string
   default     = "us-west1"
 }
 
-variable "service_name" {
-  description = "Cloud Run service name"
+variable "zone" {
+  description = "GCE zone for the VM"
+  type        = string
+  default     = "us-west1-b"
+}
+
+variable "vm_name" {
+  description = "GCE instance name"
   type        = string
   default     = "openclaw-gateway"
 }
 
+variable "machine_type" {
+  description = "GCE machine type"
+  type        = string
+  default     = "e2-medium"
+}
+
+variable "disk_size_gb" {
+  description = "Size in GB for persistent data disk"
+  type        = number
+  default     = 20
+}
+
+variable "domain" {
+  description = "FQDN for the gateway (Caddy TLS, e.g. gateway.openclaw.ai)"
+  type        = string
+}
+
 variable "image" {
-  description = "Container image URI (Artifact Registry)"
+  description = "Container image URI (e.g. ghcr.io/openclaw/openclaw:deploy or Artifact Registry)"
   type        = string
-}
-
-variable "min_instances" {
-  description = "Minimum Cloud Run instances (WhatsApp requires >= 1)"
-  type        = number
-  default     = 1
-}
-
-variable "max_instances" {
-  description = "Maximum Cloud Run instances"
-  type        = number
-  default     = 2
-}
-
-variable "cpu" {
-  description = "CPU limit"
-  type        = string
-  default     = "2"
-}
-
-variable "memory" {
-  description = "Memory limit"
-  type        = string
-  default     = "2Gi"
 }
 
 variable "openclaw_config_secret" {

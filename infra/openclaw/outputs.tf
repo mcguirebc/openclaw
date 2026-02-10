@@ -1,6 +1,11 @@
-output "service_url" {
-  description = "OpenClaw Cloud Run service URL"
-  value       = google_cloud_run_v2_service.openclaw.uri
+output "vm_external_ip" {
+  description = "External IP of the OpenClaw gateway VM"
+  value       = google_compute_address.openclaw.address
+}
+
+output "gateway_url" {
+  description = "HTTPS URL for the gateway (point DNS A record to vm_external_ip)"
+  value       = "https://${var.domain}"
 }
 
 output "brain_bucket" {

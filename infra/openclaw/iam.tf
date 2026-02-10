@@ -24,3 +24,16 @@ resource "google_secret_manager_secret_iam_member" "openclaw_config_access" {
   role      = "roles/secretmanager.secretAccessor"
   member    = "serviceAccount:${google_service_account.openclaw.email}"
 }
+
+# Cloud Logging and Monitoring for the GCE VM
+resource "google_project_iam_member" "openclaw_logging" {
+  project = var.project_id
+  role    = "roles/logging.logWriter"
+  member  = "serviceAccount:${google_service_account.openclaw.email}"
+}
+
+resource "google_project_iam_member" "openclaw_monitoring" {
+  project = var.project_id
+  role    = "roles/monitoring.metricWriter"
+  member  = "serviceAccount:${google_service_account.openclaw.email}"
+}
