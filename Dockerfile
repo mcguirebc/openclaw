@@ -29,8 +29,8 @@ RUN pnpm install --frozen-lockfile
 COPY . .
 RUN pnpm build
 # Force pnpm for UI build (Bun may fail on ARM/Synology architectures)
-    ENV OPENCLAW_PREFER_PNPM=1
-    RUN pnpm ui:build
+ENV OPENCLAW_PREFER_PNPM=1
+RUN pnpm ui:build
 
 # Install mcporter (Linear MCP bridge) and Codex CLI
 RUN npm install -g mcporter || echo "mcporter install skipped"

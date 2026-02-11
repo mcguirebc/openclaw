@@ -26,10 +26,7 @@
       "maxConcurrent": 1,
       "model": {
         "primary": "anthropic/claude-sonnet-4-5",
-        "fallbacks": [
-          "openai/gpt-4.1-mini",
-          "nvidia-nim/moonshotai/kimi-k2.5"
-        ]
+        "fallbacks": ["openai/gpt-4.1-mini", "nvidia-nim/moonshotai/kimi-k2.5"]
       },
       "models": {
         "anthropic/claude-sonnet-4-5": {
@@ -61,10 +58,7 @@
             "id": "moonshotai/kimi-k2.5",
             "name": "Kimi K2.5 (NVIDIA NIM)",
             "reasoning": true,
-            "input": [
-              "text",
-              "image"
-            ],
+            "input": ["text", "image"],
             "cost": {
               "input": 0,
               "output": 0,
@@ -82,17 +76,13 @@
     "telegram": {
       "enabled": true,
       "dmPolicy": "allowlist",
-      "allowFrom": [
-        "7918231249",
-        "@mcguirebc"
-      ],
-      "webhookUrl": "https://gateway.note.ski/telegram-webhook"
+      "allowFrom": ["7918231249", "@mcguirebc"],
+      "webhookUrl": "https://gateway.note.ski/telegram-webhook",
+      "webhookSecret": "${TELEGRAM_WEBHOOK_SECRET}"
     },
     "whatsapp": {
       "dmPolicy": "allowlist",
-      "allowFrom": [
-        "${OPENCLAW_WHATSAPP_ALLOW_FROM}"
-      ],
+      "allowFrom": ["${OPENCLAW_WHATSAPP_ALLOW_FROM}"],
       "ackReaction": {
         "emoji": "\ud83d\udc40",
         "direct": true

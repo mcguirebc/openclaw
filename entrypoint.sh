@@ -28,6 +28,7 @@ if [[ -n "${OPENCLAW_CONFIG:-}" ]]; then
   export LINEAR_API_KEY="$(node -e 'const c=JSON.parse(process.env.OPENCLAW_CONFIG||"{}"); process.stdout.write(c.linear_api_key||"")')"
   export OPENCLAW_WHATSAPP_ALLOW_FROM="$(node -e 'const c=JSON.parse(process.env.OPENCLAW_CONFIG||"{}"); process.stdout.write(c.whatsapp_phone||"")')"
   export TELEGRAM_BOT_TOKEN="$(node -e 'const c=JSON.parse(process.env.OPENCLAW_CONFIG||"{}"); process.stdout.write(c.telegram_bot_token||"")')"
+  export TELEGRAM_WEBHOOK_SECRET="$(node -e 'const c=JSON.parse(process.env.OPENCLAW_CONFIG||"{}"); process.stdout.write(c.telegram_webhook_secret||"")')"
   export GMAIL_USER="$(node -e 'const c=JSON.parse(process.env.OPENCLAW_CONFIG||"{}"); process.stdout.write(c.gmail_user||"")')"
   export GMAIL_PASSWORD="$(node -e 'const c=JSON.parse(process.env.OPENCLAW_CONFIG||"{}"); process.stdout.write(c.gmail_app_password||"")')"
   export GOOGLE_CLIENT_SECRET="$(node -e 'const c=JSON.parse(process.env.OPENCLAW_CONFIG||"{}"); process.stdout.write(c.google_client_secret||"")')"

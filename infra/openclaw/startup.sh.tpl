@@ -33,6 +33,7 @@ if ! mountpoint -q /data/openclaw; then
   echo "$DATA_DISK /data/openclaw ext4 defaults,nofail 0 2" >> /etc/fstab
   mount /data/openclaw
 fi
+chown -R 1000:1000 /data/openclaw
 
 # Create app directory
 mkdir -p /opt/openclaw
@@ -51,12 +52,14 @@ ${domain} {
 }
 CADDYEOF
 
-# Docker Compose (openclaw_config_placeholder = literal for docker-compose env substitution)
+# Docker Compose (env_file provides OPENCLAW_CONFIG from .env)
 cat > /opt/openclaw/docker-compose.prod.yml << 'COMPOSEEOF'
 services:
   openclaw-gateway:
     image: ${image}
     restart: unless-stopped
+    env_file:
+      - .env
     environment:
       OPENCLAW_STATE_DIR: /data/openclaw
       OPENCLAW_CONFIG_PATH: /data/openclaw/openclaw.json
@@ -64,15 +67,15 @@ services:
       OPENCLAW_CONFIG_TEMPLATE_FORCE: "1"
       OPENCLAW_BRAIN_BUCKET: ${brain_bucket}
       OPENCLAW_SESSIONS_BUCKET: ${sessions_bucket}
-      OPENCLAW_CONFIG: ${openclaw_config_placeholder}
     volumes:
       - /data/openclaw:/data/openclaw
     ports:
       - "127.0.0.1:8080:8080"
 COMPOSEEOF
 
-# Fetch config secret and export for docker-compose
-export OPENCLAW_CONFIG=$(gcloud secrets versions access ${openclaw_config_secret_ver} --secret=${openclaw_config_secret} --project=${project_id} 2>/dev/null || echo "{}")
+# Write config secret to .env so docker-compose reads it on every start/restart (jq -c for single-line JSON)
+OPENCLAW_CONFIG=$(gcloud secrets versions access ${openclaw_config_secret_ver} --secret=${openclaw_config_secret} --project=${project_id} 2>/dev/null | jq -c . 2>/dev/null || echo "{}")
+printf 'OPENCLAW_CONFIG=%s\n' "$OPENCLAW_CONFIG" > /opt/openclaw/.env
 
 # Start Caddy
 systemctl enable caddy

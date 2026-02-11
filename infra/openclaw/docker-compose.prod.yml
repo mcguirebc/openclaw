@@ -1,17 +1,19 @@
 # Production docker-compose for GCE VM.
-# The startup script creates this file with OPENCLAW_CONFIG from Secret Manager.
-# Deploy workflow: docker compose -f /opt/openclaw/docker-compose.prod.yml pull && docker compose -f /opt/openclaw/docker-compose.prod.yml up -d
+# Startup script and deploy workflow write .env with OPENCLAW_CONFIG from Secret Manager.
+# Deploy workflow: write .env, then docker compose -f docker-compose.prod.yml pull && up -d
 services:
   openclaw-gateway:
     image: ghcr.io/mcguirebc/openclaw:deploy
     restart: unless-stopped
+    env_file:
+      - .env
     environment:
       OPENCLAW_STATE_DIR: /data/openclaw
       OPENCLAW_CONFIG_PATH: /data/openclaw/openclaw.json
       OPENCLAW_CONFIG_TEMPLATE: /app/infra/openclaw/openclaw.json
+      OPENCLAW_CONFIG_TEMPLATE_FORCE: "1"
       OPENCLAW_BRAIN_BUCKET: ${OPENCLAW_BRAIN_BUCKET}
       OPENCLAW_SESSIONS_BUCKET: ${OPENCLAW_SESSIONS_BUCKET}
-      OPENCLAW_CONFIG: ${OPENCLAW_CONFIG}
     volumes:
       - /data/openclaw:/data/openclaw
     ports:
