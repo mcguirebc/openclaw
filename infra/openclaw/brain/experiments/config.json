@@ -1,0 +1,12 @@
+{
+  "active_experiment": "prompt-v1-baseline",
+  "experiments": {
+    "prompt-v1-baseline": {
+      "control": "prompts/active/",
+      "treatment": "prompts/v1/",
+      "allocation": 0.5,
+      "metrics": ["response_quality", "task_completion"],
+      "start_date": "2026-01-31"
+    }
+  }
+}

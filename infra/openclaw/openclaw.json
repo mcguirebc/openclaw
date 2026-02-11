@@ -1,0 +1,128 @@
+{
+  "web": {
+    "enabled": true
+  },
+  "gateway": {
+    "mode": "local",
+    "port": 8080,
+    "bind": "lan",
+    "controlUi": {
+      "dangerouslyDisableDeviceAuth": true
+    },
+    "auth": {
+      "token": "${OPENCLAW_GATEWAY_TOKEN}"
+    }
+  },
+  "env": {
+    "NVIDIA_API_KEY": "${NVIDIA_API_KEY}",
+    "ANTHROPIC_API_KEY": "${ANTHROPIC_API_KEY}",
+    "OPENAI_API_KEY": "${OPENAI_API_KEY}",
+    "LINEAR_API_KEY": "${LINEAR_API_KEY}",
+    "GITHUB_TOKEN": "${GITHUB_TOKEN}",
+    "OPENCLAW_WHATSAPP_ALLOW_FROM": "${OPENCLAW_WHATSAPP_ALLOW_FROM}"
+  },
+  "agents": {
+    "defaults": {
+      "maxConcurrent": 1,
+      "model": {
+        "primary": "anthropic/claude-sonnet-4-5",
+        "fallbacks": [
+          "openai/gpt-4.1-mini",
+          "nvidia-nim/moonshotai/kimi-k2.5"
+        ]
+      },
+      "models": {
+        "anthropic/claude-sonnet-4-5": {
+          "alias": "Claude Sonnet 4.5"
+        },
+        "openai/gpt-4.1-mini": {
+          "alias": "GPT-4.1 Mini"
+        },
+        "nvidia-nim/moonshotai/kimi-k2.5": {
+          "alias": "Kimi K2.5"
+        }
+      }
+    }
+  },
+  "logging": {
+    "level": "info",
+    "consoleLevel": "info",
+    "consoleStyle": "compact"
+  },
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "nvidia-nim": {
+        "baseUrl": "https://integrate.api.nvidia.com/v1",
+        "apiKey": "${NVIDIA_API_KEY}",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "moonshotai/kimi-k2.5",
+            "name": "Kimi K2.5 (NVIDIA NIM)",
+            "reasoning": true,
+            "input": [
+              "text",
+              "image"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 256000,
+            "maxTokens": 16384
+          }
+        ]
+      }
+    }
+  },
+  "channels": {
+    "telegram": {
+      "enabled": true,
+      "dmPolicy": "allowlist",
+      "allowFrom": [
+        "7918231249",
+        "@mcguirebc"
+      ],
+      "webhookUrl": "https://gateway.note.ski/telegram-webhook"
+    },
+    "whatsapp": {
+      "dmPolicy": "allowlist",
+      "allowFrom": [
+        "${OPENCLAW_WHATSAPP_ALLOW_FROM}"
+      ],
+      "ackReaction": {
+        "emoji": "\ud83d\udc40",
+        "direct": true
+      }
+    }
+  },
+  "plugins": {
+    "entries": {
+      "telegram": {
+        "enabled": true
+      }
+    }
+  },
+  "skills": {
+    "entries": {
+      "gcs-memory": {
+        "enabled": true
+      },
+      "coding-agent": {
+        "enabled": true
+      },
+      "github": {
+        "enabled": true
+      },
+      "mcporter": {
+        "enabled": true
+      },
+      "gog": {
+        "enabled": true
+      }
+    }
+  }
+}

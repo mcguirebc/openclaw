@@ -1,0 +1,66 @@
+name: Deploy to GCE
+
+on:
+  push:
+    branches:
+      - deploy
+
+concurrency:
+  group: deploy-gce
+  cancel-in-progress: false
+
+env:
+  PROJECT_ID: fin45-483402
+  ZONE: us-west1-b
+  VM_NAME: openclaw-gateway
+  IMAGE: ghcr.io/openclaw/openclaw:deploy
+  DOMAIN: gateway.note.ski
+
+permissions:
+  contents: read
+  id-token: write
+  packages: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/751572738104/locations/global/workloadIdentityPools/github-actions/providers/github-actions-provider
+          service_account: github-deploy@fin45-483402.iam.gserviceaccount.com
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push image
+        run: |
+          docker build -t ${{ env.IMAGE }} .
+          docker push ${{ env.IMAGE }}
+
+      - name: Deploy to GCE VM
+        run: |
+          gcloud compute ssh ${{ env.VM_NAME }} \
+            --zone=${{ env.ZONE }} \
+            --project=${{ env.PROJECT_ID }} \
+            --command='export PATH="/opt/google-cloud-sdk/bin:$PATH" && export OPENCLAW_CONFIG=$(gcloud secrets versions access latest --secret=openclaw-config --project=${{ env.PROJECT_ID }} 2>/dev/null || echo "{}") && cd /opt/openclaw && docker compose -f docker-compose.prod.yml pull && docker compose -f docker-compose.prod.yml up -d'
+
+      - name: Health check
+        run: |
+          echo "Waiting for gateway to be ready..."
+          sleep 10
+          curl -sf https://${{ env.DOMAIN }}/healthz || echo "Health check failed (gateway may still be starting)"
+
+      - name: Show gateway URL
+        run: echo "Gateway URL: https://${{ env.DOMAIN }}"

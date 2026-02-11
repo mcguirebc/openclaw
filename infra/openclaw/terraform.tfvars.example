@@ -1,0 +1,5 @@
+# Copy to terraform.tfvars and fill in values.
+# Required: project_id, domain, image
+project_id = "fin45-483402"
+domain     = "gateway.note.ski"
+image      = "ghcr.io/openclaw/openclaw:deploy"

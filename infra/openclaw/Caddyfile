@@ -1,0 +1,4 @@
+# Caddy reverse proxy with auto-TLS.
+# The VM startup script writes /etc/caddy/Caddyfile with the actual domain from Terraform var.domain.
+# Template (domain injected at VM startup):
+#   {domain} { reverse_proxy localhost:8080 }
