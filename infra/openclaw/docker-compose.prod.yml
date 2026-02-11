@@ -3,7 +3,7 @@
 # Deploy workflow: docker compose -f /opt/openclaw/docker-compose.prod.yml pull && docker compose -f /opt/openclaw/docker-compose.prod.yml up -d
 services:
   openclaw-gateway:
-    image: ghcr.io/openclaw/openclaw:deploy
+    image: ghcr.io/mcguirebc/openclaw:deploy
     restart: unless-stopped
     environment:
       OPENCLAW_STATE_DIR: /data/openclaw
