@@ -15,6 +15,25 @@ resource "google_storage_bucket_iam_member" "sessions_admin" {
   member = "serviceAccount:${google_service_account.openclaw.email}"
 }
 
+# GitHub Actions deploy service account — needs SSH + secret access
+resource "google_project_iam_member" "deploy_instance_admin" {
+  project = var.project_id
+  role    = "roles/compute.instanceAdmin.v1"
+  member  = "serviceAccount:${var.deploy_service_account}"
+}
+
+resource "google_project_iam_member" "deploy_sa_user" {
+  project = var.project_id
+  role    = "roles/iam.serviceAccountUser"
+  member  = "serviceAccount:${var.deploy_service_account}"
+}
+
+resource "google_secret_manager_secret_iam_member" "deploy_config_access" {
+  secret_id = data.google_secret_manager_secret.openclaw_config.id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${var.deploy_service_account}"
+}
+
 data "google_secret_manager_secret" "openclaw_config" {
   secret_id = var.openclaw_config_secret
 }

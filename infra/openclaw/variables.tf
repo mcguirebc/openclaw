@@ -43,6 +43,12 @@ variable "image" {
   type        = string
 }
 
+variable "deploy_service_account" {
+  description = "Service account email used by GitHub Actions deploy workflow"
+  type        = string
+  default     = "github-deploy@fin45-483402.iam.gserviceaccount.com"
+}
+
 variable "openclaw_config_secret" {
   description = "Secret Manager secret name containing unified JSON config"
   type        = string
