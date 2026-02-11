@@ -407,9 +407,6 @@ export const telegramPlugin: ChannelPlugin<ResolvedTelegramAccount, TelegramProb
         }
       }
       ctx.log?.info(`[${account.accountId}] starting provider${telegramBotLabel}`);
-      const webhookUrl = account.config.webhookUrl?.trim();
-      const webhookPath = account.config.webhookPath?.trim();
-      const webhookSecret = account.config.webhookSecret?.trim();
       if (webhookUrl) {
         const webhook = await getTelegramRuntime().channel.telegram.createTelegramWebhookHandler({
           token,
