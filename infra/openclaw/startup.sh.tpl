@@ -12,6 +12,9 @@ apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 # Install gcloud CLI
 curl -sSL https://sdk.cloud.google.com | bash -s -- --disable-prompts --install-dir=/opt
 export PATH="/opt/google-cloud-sdk/bin:$PATH"
+# Persist gcloud in PATH for all users (SSH sessions, deploy scripts)
+echo 'export PATH="/opt/google-cloud-sdk/bin:$PATH"' > /etc/profile.d/gcloud.sh
+chmod +x /etc/profile.d/gcloud.sh
 
 # Install jq and Caddy
 apt-get install -y jq
@@ -58,6 +61,7 @@ services:
       OPENCLAW_STATE_DIR: /data/openclaw
       OPENCLAW_CONFIG_PATH: /data/openclaw/openclaw.json
       OPENCLAW_CONFIG_TEMPLATE: /app/infra/openclaw/openclaw.json
+      OPENCLAW_CONFIG_TEMPLATE_FORCE: "1"
       OPENCLAW_BRAIN_BUCKET: ${brain_bucket}
       OPENCLAW_SESSIONS_BUCKET: ${sessions_bucket}
       OPENCLAW_CONFIG: ${openclaw_config_placeholder}
