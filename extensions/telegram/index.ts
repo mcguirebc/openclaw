@@ -1,6 +1,5 @@
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk";
+import type { ChannelPlugin, OpenClawPluginApi } from "openclaw/plugin-sdk";
 import { emptyPluginConfigSchema } from "openclaw/plugin-sdk";
-
 import { telegramPlugin } from "./src/channel.js";
 import { getTelegramWebhookHandler, setTelegramRuntime } from "./src/runtime.js";
 
@@ -30,7 +29,7 @@ const plugin = {
       await entry.handler(req, res);
       return true;
     });
-    api.registerChannel({ plugin: telegramPlugin });
+    api.registerChannel({ plugin: telegramPlugin as ChannelPlugin });
   },
 };
 
