@@ -69,7 +69,7 @@ jobs:
           gcloud compute ssh ${{ env.VM_NAME }} \
             --zone=${{ env.ZONE }} \
             --project=${{ env.PROJECT_ID }} \
-            --command='export PATH="/opt/google-cloud-sdk/bin:$PATH" && OPENCLAW_CONFIG=$(gcloud secrets versions access latest --secret=openclaw-config --project=${{ env.PROJECT_ID }} 2>/dev/null | jq -c . 2>/dev/null || echo "{}") && printf "OPENCLAW_CONFIG=%s\n" "$OPENCLAW_CONFIG" | sudo tee /opt/openclaw/.env > /dev/null && cd /opt/openclaw && docker compose -f docker-compose.prod.yml pull && docker compose -f docker-compose.prod.yml up -d'
+            --command='export PATH="/opt/google-cloud-sdk/bin:$PATH" && OPENCLAW_CONFIG=$(gcloud secrets versions access latest --secret=openclaw-config --project=${{ env.PROJECT_ID }} 2>/dev/null | jq -c . 2>/dev/null || echo "{}") && printf "OPENCLAW_CONFIG=%s\n" "$OPENCLAW_CONFIG" | sudo tee /opt/openclaw/.env > /dev/null && cd /opt/openclaw && docker image prune -af && docker compose -f docker-compose.prod.yml pull && docker compose -f docker-compose.prod.yml up -d'
 
       - name: Health check
         run: |
