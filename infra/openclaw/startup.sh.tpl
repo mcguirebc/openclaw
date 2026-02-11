@@ -83,6 +83,53 @@ systemctl start caddy
 # Caddy may fail TLS on first boot if DNS hasn't propagated; retry after a short delay
 (sleep 30 && systemctl restart caddy) &
 
+# ── Periodic state backup to GCS ──
+cat > /opt/openclaw/backup-state.sh << 'BACKUPEOF'
+#!/usr/bin/env bash
+set -euo pipefail
+BUCKET="${sessions_bucket}"
+STATE_DIR="/data/openclaw"
+DEST="gs://$${BUCKET}/state-backup"
+export PATH="/opt/google-cloud-sdk/bin:$PATH"
+echo "[$(date -u +%FT%TZ)] Starting state backup: $${STATE_DIR} → $${DEST}"
+gcloud storage rsync "$${STATE_DIR}" "$${DEST}" \
+  --recursive \
+  --delete-unmatched-destination-objects \
+  --exclude='lost\+found/.*'
+echo "[$(date -u +%FT%TZ)] State backup complete"
+BACKUPEOF
+chmod +x /opt/openclaw/backup-state.sh
+
+# systemd service unit
+cat > /etc/systemd/system/openclaw-backup.service << 'SVCEOF'
+[Unit]
+Description=Backup OpenClaw state to GCS
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/openclaw/backup-state.sh
+StandardOutput=journal
+StandardError=journal
+SVCEOF
+
+# systemd timer: every 6 hours
+cat > /etc/systemd/system/openclaw-backup.timer << 'TMREOF'
+[Unit]
+Description=Run OpenClaw state backup every 6 hours
+
+[Timer]
+OnBootSec=15min
+OnUnitActiveSec=6h
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+TMREOF
+
+systemctl daemon-reload
+systemctl enable --now openclaw-backup.timer
+
 # Start OpenClaw container (OPENCLAW_CONFIG from host env)
 cd /opt/openclaw
 docker compose -f docker-compose.prod.yml pull
