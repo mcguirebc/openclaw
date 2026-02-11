@@ -71,4 +71,8 @@ resource "google_compute_instance" "openclaw" {
     image                       = var.image
     openclaw_config_placeholder = join("", ["$", "{", "OPENCLAW_CONFIG", "}"])
   })
+
+  lifecycle {
+    ignore_changes = [metadata_startup_script]
+  }
 }
