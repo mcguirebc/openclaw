@@ -35,6 +35,14 @@ if ! mountpoint -q /data/openclaw; then
 fi
 chown -R 1000:1000 /data/openclaw
 
+# Restore state from GCS backup if data dir is empty (fresh disk / VM recreation)
+STATE_FILES=$(find /data/openclaw -maxdepth 1 -not -name 'lost+found' -not -path /data/openclaw | head -1)
+if [[ -z "$STATE_FILES" ]]; then
+  echo "Empty data dir detected — restoring from GCS backup..."
+  gcloud storage rsync "gs://${sessions_bucket}/state-backup" /data/openclaw --recursive || echo "No backup found, starting fresh"
+  chown -R 1000:1000 /data/openclaw
+fi
+
 # Create app directory
 mkdir -p /opt/openclaw
 cd /opt/openclaw
