@@ -9,13 +9,6 @@ type TelegramWebhookHandler = {
 };
 let webhookHandler: TelegramWebhookHandler | null = null;
 
-type TelegramWebhookHandler = {
-  path: string;
-  handler: (req: IncomingMessage, res: ServerResponse) => Promise<void> | void;
-  stop?: () => Promise<void> | void;
-};
-let webhookHandler: TelegramWebhookHandler | null = null;
-
 export function setTelegramRuntime(next: PluginRuntime) {
   runtime = next;
 }
