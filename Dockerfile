@@ -27,24 +27,26 @@ COPY scripts ./scripts
 RUN pnpm install --frozen-lockfile
 
 COPY . .
-RUN OPENCLAW_A2UI_SKIP_MISSING=1 pnpm build
+RUN pnpm build
 # Force pnpm for UI build (Bun may fail on ARM/Synology architectures)
-    ENV OPENCLAW_PREFER_PNPM=1
-    RUN pnpm ui:build
+ENV OPENCLAW_PREFER_PNPM=1
+RUN pnpm ui:build
 
-    # Install mcporter (Linear MCP bridge) and Codex CLI
-    RUN npm install -g mcporter || echo "mcporter install skipped"
-    RUN npm install -g @openai/codex || echo "codex install skipped"
+# Install mcporter (Linear MCP bridge) and Codex CLI
+RUN npm install -g mcporter || echo "mcporter install skipped"
+RUN npm install -g @openai/codex || echo "codex install skipped"
 
-    ENV NODE_ENV=production
+ENV NODE_ENV=production
 ENV NODE_OPTIONS="--max-old-space-size=1536"
 
 # Create data directory and set permissions
 RUN mkdir -p /data/openclaw && chown -R node:node /data
+RUN chown -R node:node /app
 RUN chmod +x /app/entrypoint.sh
 
 # Security hardening: Run as non-root user
 USER node
 
+# Entrypoint parses OPENCLAW_CONFIG secret into env vars; CMD runs gateway
 ENTRYPOINT ["/app/entrypoint.sh"]
-CMD ["node", "dist/index.js", "gateway", "--bind", "lan", "--port", "8080"]
+CMD ["node", "openclaw.mjs", "gateway", "--bind", "lan", "--port", "8080"]
