@@ -15,6 +15,54 @@ import { defaultRuntime } from "../runtime.js";
 import { resolveTelegramAllowedUpdates } from "./allowed-updates.js";
 import { withTelegramApiErrorLogging } from "./api-logging.js";
 import { createTelegramBot } from "./bot.js";
+import { makeProxyFetch } from "./proxy.js";
+
+export async function createTelegramWebhookHandler(opts: {
+  token: string;
+  accountId?: string;
+  config?: OpenClawConfig;
+  path?: string;
+  secret?: string;
+  runtime?: RuntimeEnv;
+  fetch?: typeof fetch;
+  proxyUrl?: string;
+  publicUrl: string;
+}) {
+  const path = opts.path ?? "/telegram-webhook";
+  const runtime = opts.runtime ?? defaultRuntime;
+  const proxyFetch = opts.fetch ?? (opts.proxyUrl ? makeProxyFetch(opts.proxyUrl) : undefined);
+  const bot = createTelegramBot({
+    token: opts.token,
+    runtime,
+    proxyFetch,
+    config: opts.config,
+    accountId: opts.accountId,
+  });
+  const handler = webhookCallback(bot, "http", {
+    secretToken: opts.secret,
+  });
+
+  await withTelegramApiErrorLogging({
+    operation: "setWebhook",
+    runtime,
+    fn: () =>
+      bot.api.setWebhook(opts.publicUrl, {
+        secret_token: opts.secret,
+        allowed_updates: resolveTelegramAllowedUpdates(),
+      }),
+  });
+
+  const stop = async () => {
+    await withTelegramApiErrorLogging({
+      operation: "deleteWebhook",
+      runtime,
+      fn: () => bot.api.deleteWebhook(),
+    });
+    await bot.stop();
+  };
+
+  return { path, handler, bot, stop };
+}
 
 export async function startTelegramWebhook(opts: {
   token: string;

@@ -27,7 +27,7 @@ import {
   type ResolvedTelegramAccount,
   type TelegramProbe,
 } from "openclaw/plugin-sdk";
-import { getTelegramRuntime } from "./runtime.js";
+import { getTelegramRuntime, setTelegramWebhookHandler } from "./runtime.js";
 
 const meta = getChatChannelMeta("telegram");
 
@@ -404,16 +404,49 @@ export const telegramPlugin: ChannelPlugin<ResolvedTelegramAccount, TelegramProb
         }
       }
       ctx.log?.info(`[${account.accountId}] starting provider${telegramBotLabel}`);
+      const webhookUrl = account.config.webhookUrl?.trim();
+      const webhookPath = account.config.webhookPath?.trim();
+      const webhookSecret = account.config.webhookSecret?.trim();
+      if (webhookUrl) {
+        const webhook = await getTelegramRuntime().channel.telegram.createTelegramWebhookHandler({
+          token,
+          accountId: account.accountId,
+          config: ctx.cfg,
+          runtime: ctx.runtime,
+          proxyUrl: account.config.proxy,
+          publicUrl: webhookUrl,
+          path: webhookPath,
+          secret: webhookSecret,
+        });
+        setTelegramWebhookHandler({
+          path: webhook.path,
+          handler: webhook.handler,
+          stop: webhook.stop,
+        });
+        ctx.abortSignal?.addEventListener(
+          "abort",
+          () => {
+            setTelegramWebhookHandler(null);
+            void webhook.stop?.();
+          },
+          { once: true },
+        );
+        await new Promise<void>((resolve) => {
+          if (ctx.abortSignal?.aborted) {
+            resolve();
+            return;
+          }
+          ctx.abortSignal?.addEventListener("abort", () => resolve(), { once: true });
+        });
+        return;
+      }
       return getTelegramRuntime().channel.telegram.monitorTelegramProvider({
         token,
         accountId: account.accountId,
         config: ctx.cfg,
         runtime: ctx.runtime,
         abortSignal: ctx.abortSignal,
-        useWebhook: Boolean(account.config.webhookUrl),
-        webhookUrl: account.config.webhookUrl,
-        webhookSecret: account.config.webhookSecret,
-        webhookPath: account.config.webhookPath,
+        useWebhook: false,
       });
     },
     logoutAccount: async ({ accountId, cfg }) => {
