@@ -77,9 +77,11 @@ COMPOSEEOF
 OPENCLAW_CONFIG=$(gcloud secrets versions access ${openclaw_config_secret_ver} --secret=${openclaw_config_secret} --project=${project_id} 2>/dev/null | jq -c . 2>/dev/null || echo "{}")
 printf 'OPENCLAW_CONFIG=%s\n' "$OPENCLAW_CONFIG" > /opt/openclaw/.env
 
-# Start Caddy
+# Start Caddy (restart after a delay to ensure ACME/TLS certificate is obtained)
 systemctl enable caddy
 systemctl start caddy
+# Caddy may fail TLS on first boot if DNS hasn't propagated; retry after a short delay
+(sleep 30 && systemctl restart caddy) &
 
 # Start OpenClaw container (OPENCLAW_CONFIG from host env)
 cd /opt/openclaw
