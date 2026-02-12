@@ -16,8 +16,11 @@ RUN if [ -n "$OPENCLAW_DOCKER_APT_PACKAGES" ]; then \
       rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*; \
     fi
 
-# Install gog (Google Workspace CLI) via npm
-RUN npm install -g gogcli || echo "gog install skipped (optional)"
+# Install gog (Google Workspace CLI) from GitHub release
+RUN GOG_VERSION="0.9.0" \
+    && curl -fsSL "https://github.com/steipete/gogcli/releases/download/v${GOG_VERSION}/gogcli_${GOG_VERSION}_linux_amd64.tar.gz" \
+       | tar -xz -C /usr/local/bin gog \
+    && chmod +x /usr/local/bin/gog
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY ui/package.json ./ui/package.json
