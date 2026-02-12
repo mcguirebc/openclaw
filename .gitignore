@@ -88,3 +88,4 @@ local/
 .terraform/
 *.tfstate
 *.tfstate.backup
+infra/openclaw/tfplan
