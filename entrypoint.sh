@@ -52,6 +52,14 @@ if [[ -n "${GOOGLE_CLIENT_SECRET:-}" ]]; then
   echo "$GOOGLE_CLIENT_SECRET" > "$OPENCLAW_STATE_DIR/google_client_secret.json"
 fi
 
+# Write service account key for gog service-account auth and gcloud ADC
+SERVICE_ACCOUNT_KEY="$(node -e 'const c=JSON.parse(process.env.OPENCLAW_CONFIG||"{}"); process.stdout.write(c.service_account_key||"")' 2>/dev/null || true)"
+if [[ -n "${SERVICE_ACCOUNT_KEY:-}" ]]; then
+  echo "Writing service_account_key.json..."
+  echo "$SERVICE_ACCOUNT_KEY" > "$OPENCLAW_STATE_DIR/service_account_key.json"
+  export GOOGLE_APPLICATION_CREDENTIALS="$OPENCLAW_STATE_DIR/service_account_key.json"
+fi
+
 # Seed mcporter config for Linear MCP
 MCPORTER_CONFIG_DIR="${HOME}/.config/mcporter"
 mkdir -p "$MCPORTER_CONFIG_DIR"
