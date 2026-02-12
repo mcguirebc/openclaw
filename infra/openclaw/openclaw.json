@@ -39,6 +39,11 @@
         "nvidia-nim/moonshotai/kimi-k2.5": {
           "alias": "Kimi K2.5"
         }
+      },
+      "sandbox": {
+        "docker": {
+          "image": "ghcr.io/mcguirebc/openclaw:deploy"
+        }
       }
     }
   },
