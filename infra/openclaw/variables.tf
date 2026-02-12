@@ -60,3 +60,9 @@ variable "openclaw_config_secret_version" {
   type        = string
   default     = "latest"
 }
+
+variable "parquet_bucket_name" {
+  description = "GCS bucket name for fin45 parquet files (optional; set in terraform.tfvars to override)"
+  type        = string
+  default     = "fin45-483402-data"
+}

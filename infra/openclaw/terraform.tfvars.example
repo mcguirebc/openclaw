@@ -3,3 +3,6 @@
 project_id = "fin45-483402"
 domain     = "gateway.note.ski"
 image      = "ghcr.io/openclaw/openclaw:deploy"
+
+# Optional: bucket containing fin45 parquet files (grants read access to openclaw-gateway SA)
+# parquet_bucket_name = "your-parquet-bucket-name"

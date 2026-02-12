@@ -32,6 +32,7 @@ if [[ -n "${OPENCLAW_CONFIG:-}" ]]; then
   export GMAIL_USER="$(node -e 'const c=JSON.parse(process.env.OPENCLAW_CONFIG||"{}"); process.stdout.write(c.gmail_user||"")')"
   export GMAIL_PASSWORD="$(node -e 'const c=JSON.parse(process.env.OPENCLAW_CONFIG||"{}"); process.stdout.write(c.gmail_app_password||"")')"
   export GOOGLE_CLIENT_SECRET="$(node -e 'const c=JSON.parse(process.env.OPENCLAW_CONFIG||"{}"); process.stdout.write(c.google_client_secret||"")')"
+  export GOG_ACCOUNT="$(node -e 'const c=JSON.parse(process.env.OPENCLAW_CONFIG||"{}"); process.stdout.write(c.gog_account||"")')"
 
   # Gateway auth token - parse from secret or generate random
   GATEWAY_TOKEN="$(node -e 'const c=JSON.parse(process.env.OPENCLAW_CONFIG||"{}"); process.stdout.write(c.gateway_token||"")')"

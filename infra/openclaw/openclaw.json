@@ -19,14 +19,15 @@
     "OPENAI_API_KEY": "${OPENAI_API_KEY}",
     "LINEAR_API_KEY": "${LINEAR_API_KEY}",
     "GITHUB_TOKEN": "${GITHUB_TOKEN}",
-    "OPENCLAW_WHATSAPP_ALLOW_FROM": "${OPENCLAW_WHATSAPP_ALLOW_FROM}"
+    "OPENCLAW_WHATSAPP_ALLOW_FROM": "${OPENCLAW_WHATSAPP_ALLOW_FROM}",
+    "GOG_ACCOUNT": "${GOG_ACCOUNT}"
   },
   "agents": {
     "defaults": {
       "maxConcurrent": 1,
       "model": {
-        "primary": "anthropic/claude-sonnet-4-5",
-        "fallbacks": ["openai/gpt-4.1-mini", "nvidia-nim/moonshotai/kimi-k2.5"]
+        "primary": "nvidia-nim/moonshotai/kimi-k2.5",
+        "fallbacks": ["anthropic/claude-sonnet-4-5", "openai/gpt-4.1-mini"]
       },
       "models": {
         "anthropic/claude-sonnet-4-5": {
@@ -45,6 +46,10 @@
     "level": "info",
     "consoleLevel": "info",
     "consoleStyle": "compact"
+  },
+  "browser": {
+    "enabled": true,
+    "defaultProfile": "openclaw"
   },
   "models": {
     "mode": "merge",
@@ -111,6 +116,21 @@
         "enabled": true
       },
       "gog": {
+        "enabled": true
+      },
+      "openai-whisper": {
+        "enabled": true
+      },
+      "openai-whisper-api": {
+        "enabled": true
+      },
+      "peekaboo": {
+        "enabled": true
+      },
+      "nano-pdf": {
+        "enabled": true
+      },
+      "weather": {
         "enabled": true
       }
     }

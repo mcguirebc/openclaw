@@ -15,6 +15,13 @@ resource "google_storage_bucket_iam_member" "sessions_admin" {
   member = "serviceAccount:${google_service_account.openclaw.email}"
 }
 
+# Read access to fin45 parquet bucket (parquet files in gs://fin45-483402-data/)
+resource "google_storage_bucket_iam_member" "parquet_reader" {
+  bucket = var.parquet_bucket_name
+  role   = "roles/storage.objectViewer"
+  member = "serviceAccount:${google_service_account.openclaw.email}"
+}
+
 # GitHub Actions deploy service account — needs SSH + secret access
 resource "google_project_iam_member" "deploy_instance_admin" {
   project = var.project_id
