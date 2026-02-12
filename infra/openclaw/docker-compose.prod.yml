@@ -14,6 +14,7 @@ services:
       OPENCLAW_CONFIG_TEMPLATE_FORCE: "1"
       OPENCLAW_BRAIN_BUCKET: ${OPENCLAW_BRAIN_BUCKET}
       OPENCLAW_SESSIONS_BUCKET: ${OPENCLAW_SESSIONS_BUCKET}
+      XDG_CONFIG_HOME: /data/openclaw
     volumes:
       - /data/openclaw:/data/openclaw
     ports:
