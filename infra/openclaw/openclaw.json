@@ -26,10 +26,17 @@
     "defaults": {
       "maxConcurrent": 1,
       "model": {
-        "primary": "nvidia-nim/moonshotai/kimi-k2.5",
-        "fallbacks": ["anthropic/claude-sonnet-4-5", "openai/gpt-4.1-mini"]
+        "primary": "anthropic/claude-opus-4-6",
+        "fallbacks": [
+          "anthropic/claude-sonnet-4-5",
+          "nvidia-nim/moonshotai/kimi-k2.5",
+          "openai/gpt-4.1-mini"
+        ]
       },
       "models": {
+        "anthropic/claude-opus-4-6": {
+          "alias": "Claude Opus 4.6"
+        },
         "anthropic/claude-sonnet-4-5": {
           "alias": "Claude Sonnet 4.5"
         },
