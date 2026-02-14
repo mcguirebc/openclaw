@@ -35,9 +35,10 @@ RUN pnpm build
 ENV OPENCLAW_PREFER_PNPM=1
 RUN pnpm ui:build
 
-# Install mcporter (Linear MCP bridge) and Codex CLI
+# Install mcporter (Linear MCP bridge), Codex CLI, and Claude Code
 RUN npm install -g mcporter || echo "mcporter install skipped"
 RUN npm install -g @openai/codex || echo "codex install skipped"
+RUN npm install -g @anthropic-ai/claude-code || echo "claude-code install skipped"
 
 # Install gcloud CLI for GCS access (fin45 parquet, etc.)
 RUN curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg \

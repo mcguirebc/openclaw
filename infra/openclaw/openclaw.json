@@ -109,7 +109,7 @@
   "plugins": {
     "entries": {
       "telegram": {
-        "enabled": true
+        "enabled": false
       }
     }
   },
